@@ -1,0 +1,10 @@
+(library
+ (name logic)
+ (public_name Logic)
+ (instrumentation
+  (backend bisect_ppx)))
+
+(menhir
+ (modules parser))
+
+(ocamllex lexer)

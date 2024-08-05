@@ -1,0 +1,57 @@
+and - symbolizes logical 'and'
+or - symbolizes logical 'or'
+not - logical 'not'
+eq - logical 'equals'
+neq - logical 'not equals'
+a gt b - 'a is greater than b'
+a lt b - 'a is less than b'
+
+a gte b - 'a is greater than or equal to b'
+a lte b - 'a is less than or equal to b'
+
+a add b - 'a+b'
+a sub b - 'a-b'
+a mult b - 'a*b'
+a div b - 'a/b'
+
+type Expr of
+| Boolean
+| Integer
+| String
+| Char
+| Expr Op Expr
+| Expr Comparator Expr
+
+type Op of add | sub | mult | div | lt | gt | eq | neq | gte | lte | concat | eval
+type Comparator of and | or | not | eq | neq | gt | gte | lte
+
+Exception Incompatible of string
+
+let eval_int_expr (e: int Expr) =
+ match e with
+ | value -> e
+ | e1 op e2 -> 
+   match op with
+   | add -> Expr(e1 + e2);
+   | sub -> Expr(e1 - e2);
+   | _ -> raise Incompatible("Invalid operator for these datatypes")
+
+let eval (e: Expr) =
+ match e with
+ | Boolean || Integer || String || Char -> e
+ | e1 op e2 -> 
+   match (e1, op, e2) with
+   |(e1 : Boolean, comp : Comparator, e2 : Boolean) -> match op with
+      |and -> Expr(e1&e2)
+      |or -> Expr(e1 || e2);
+   |(e1:Integer, op : Op, e2:Integer) ->
+      | add -> Expr(e1 + e2);
+      | sub -> Expr(e1 - e2);
+      | mult -> Expr(e1 * e2);
+      | div -> Expr(e1 / e2);
+   |(e1:Float, op : Op, e2:Float) ->
+      | add -> Expr(e1 +. e2);
+      | sub -> Expr(e1 -. e2);
+      | mult -> Expr(e1 *. e2);
+      | div -> Expr(e1 /. e2);
+   | _ -> raise Incompatible("Invalid operator for these datatypes")
